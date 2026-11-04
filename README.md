@@ -1,6 +1,6 @@
-# Math Rain
+# Minesweeper
 
-Type the answer to a falling problem and press Enter. Reach 100 points to win; three misses lose.
+Left click opens a cell, right click places a flag. Open every safe cell to win.
 
 ```
 npm ci

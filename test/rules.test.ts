@@ -8,9 +8,9 @@ import {
   flagsLeft,
   reveal,
   toggleFlag,
-} from '../src/rules.js';
+} from '../src/rules.ts';
 
-function seeded(seed) {
+function seeded(seed: number): () => number {
   return () => {
     seed = (seed * 16807) % 2147483647;
     return (seed - 1) / 2147483646;
@@ -65,4 +65,11 @@ test('nothing changes after the game is over', () => {
   toggleFlag(s, 5);
   assert.equal(s.board[5].rev, false);
   assert.equal(s.board[5].flag, false);
+});
+
+test('no more flags than mines can be placed', () => {
+  const s = buildState([0]);
+  for (let i = 10; i < 25; i++) toggleFlag(s, i);
+  assert.equal(s.board.filter((c) => c.flag).length, MINES);
+  assert.equal(flagsLeft(s), 0);
 });

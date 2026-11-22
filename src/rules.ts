@@ -1,10 +1,13 @@
+import type { Cell, GameState } from './types.ts';
+
 export const SIZE = 8;
 export const MINES = 10;
+export const MAX_NAME_LENGTH = 20;
 
-export function neighbors(i) {
+export function neighbors(i: number): number[] {
   const r = Math.floor(i / SIZE);
   const c = i % SIZE;
-  const result = [];
+  const result: number[] = [];
   for (let dr = -1; dr <= 1; dr++) {
     for (let dc = -1; dc <= 1; dc++) {
       const nr = r + dr;
@@ -17,8 +20,8 @@ export function neighbors(i) {
   return result;
 }
 
-export function buildState(mines, name = '') {
-  const board = Array.from({ length: SIZE * SIZE }, (_, i) => ({
+export function buildState(mines: number[], name = ''): GameState {
+  const board: Cell[] = Array.from({ length: SIZE * SIZE }, (_, i) => ({
     mine: mines.includes(i),
     rev: false,
     flag: false,
@@ -30,7 +33,10 @@ export function buildState(mines, name = '') {
   return { board, status: 'playing', name };
 }
 
-export function createState(rng = Math.random, name = '') {
+export function createState(
+  rng: () => number = Math.random,
+  name = '',
+): GameState {
   const order = Array.from({ length: SIZE * SIZE }, (_, i) => i);
   for (let i = order.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
@@ -39,11 +45,11 @@ export function createState(rng = Math.random, name = '') {
   return buildState(order.slice(0, MINES), name);
 }
 
-export function flagsLeft(state) {
+export function flagsLeft(state: GameState): number {
   return Math.max(0, MINES - state.board.filter((cell) => cell.flag).length);
 }
 
-export function reveal(state, i) {
+export function reveal(state: GameState, i: number): void {
   const cell = state.board[i];
   if (state.status !== 'playing' || !cell || cell.rev || cell.flag) return;
   cell.rev = true;
@@ -63,7 +69,7 @@ export function reveal(state, i) {
   }
 }
 
-export function toggleFlag(state, i) {
+export function toggleFlag(state: GameState, i: number): void {
   const cell = state.board[i];
   if (state.status !== 'playing' || !cell || cell.rev) return;
   if (!cell.flag && flagsLeft(state) <= 0) return;

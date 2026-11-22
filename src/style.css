@@ -48,6 +48,7 @@ input {
   background: #c0c0c0;
 }
 .grid {
+  width: max-content;
   display: grid;
   grid-template: repeat(8, 32px) / repeat(8, 32px);
   gap: 1px;
